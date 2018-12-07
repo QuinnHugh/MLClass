@@ -10,8 +10,8 @@ import linage_classify
 import tctools
 
 #载入MNIST数据集
-img, label = lm.load_mnist(".", "train", 'tc')
-test, tl = lm.load_mnist(".", "t10k", 'tc')
+img, label = lm.load_mnist("./data", "train", 'tc')
+test, tl = lm.load_mnist("./data", "t10k", 'tc')
 
 #把MNIST数据集的标签分类10个二分类器,0为正类,1为负类
 filter_vec = tc.tensor(range(10))
@@ -20,7 +20,7 @@ label_mat = tc.clamp(label.repeat(10, 1) - filter_mat.t(), 0, 1).cuda()
 
 #初始化线性分类器,fisher分类器
 lcm = linage_classify.FisherClassify()
-lcm.cuda()##使用cuda
+##lcm.cuda()##使用cuda
 
 #训练所有的10个分类器并将结果存入y_hat中
 y_hat = tc.Tensor(10, tl.size()[0]).cuda()

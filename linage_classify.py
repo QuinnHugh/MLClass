@@ -3,8 +3,26 @@
 """
 import torch as tc
 
+class CudaSupport(object):
+    device = tc.device('cpu')##用于设置计算设备,默认cpu
+    def __init__(self):
+        self.cuda()
 
-class LeastSquares():
+    def cuda(self, device_index=0):
+        """
+        设置类的cuda支持,更新类内的device的值
+        参数列表:
+        device_index 在有多张显卡的时候设置cuda设备,默认为第0个cuda设备
+        """
+        if tc.cuda.is_available():
+            self.device = tc.device('cuda', device_index)
+        else:
+            self.device = tc.device('cpu')
+            print("\n Warning:设备不支持cuda\n")
+
+
+
+class LeastSquares(CudaSupport):
     """
     带Redige正则项的最小二乘法
     注:alpha不要设置为0
@@ -15,8 +33,8 @@ class LeastSquares():
     w_hat = None
     xs = None
     ys = None
-    device = tc.device('cpu')##用于设置计算设备
     def __init__(self, alpha=0.2):
+        CudaSupport.__init__(self)
         #设置正则项的权值
         self.alpha = alpha
 
@@ -70,22 +88,9 @@ class LeastSquares():
             self.update_w(self.alpha)##若w为空则更新w
         return tc.mm(x_mat, self.w_hat).view(test_x.size()[0])
 
-    def cuda(self, device_index=0):
-        """
-        设置类的cuda支持,更新类内的device的值
-        参数列表:
-        device_index 在有多张显卡的时候设置cuda设备,默认为第0个cuda设备
-        """
-        if tc.cuda.is_available():
-            self.device = tc.device('cuda', device_index)
-        else:
-            self.device = tc.device('cpu')
-            print("\n设备不支持cuda\n")
 
-
-class FisherClassify():
+class FisherClassify(CudaSupport):
     """费舍尔分类器LDA"""
-    device = tc.device('cpu')##用于设置计算设备,默认cpu
     w_hat = None
     thresh = None
     x_1 = None
@@ -98,7 +103,7 @@ class FisherClassify():
 
     def __init__(self):
         """初始化分类器参数"""
-        pass
+        CudaSupport.__init__(self)
 
     def train(self, x_1, x_2):
         """
@@ -110,16 +115,16 @@ class FisherClassify():
         self.x_2 = x_2.to(self.device)
         self.update_w(self.x_1.float(), self.x_2.float())
 
-    def _calculate(self, tensor):
+    def _calculate(self, t):
         """
         输入一个tensor的类数据计算类的均值向量以及类内离散矩阵
         参数tensor: 类数据tensor
         返回u:类均值向量
         返回S_w:类内离散矩阵
         """
-        u = tensor.mean(0)
-        u_mat = u.repeat(tensor.size()[0], 1)
-        sub_mat = tensor - u_mat
+        u = t.mean(0)
+        u_mat = u.repeat(t.size()[0], 1)
+        sub_mat = t - u_mat
         S_w = tc.mm(sub_mat.t(), sub_mat)
         return u, S_w
 
@@ -153,16 +158,10 @@ class FisherClassify():
         return y_hat
 
 
-    def cuda(self, device_index=0):
-        """
-        设置类的cuda支持,更新类内的device的值
-        参数列表:
-        device_index 在有多张显卡的时候设置cuda设备,默认为第0个cuda设备
-        """
-        if tc.cuda.is_available():
-            self.device = tc.device('cuda', device_index)
-        else:
-            self.device = tc.device('cpu')
-            print("\n设备不支持cuda\n")
-
+class PerceptronClassify(CudaSupport):
+    """
+    基于感知机的分类器
+    """
+    def __init__(self):
+        CudaSupport.__init__(self)
 
