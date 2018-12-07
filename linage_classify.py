@@ -6,6 +6,7 @@ import torch as tc
 class CudaSupport(object):
     device = tc.device('cpu')##用于设置计算设备,默认cpu
     def __init__(self):
+        ##默认初始化cuda
         self.cuda()
 
     def cuda(self, device_index=0):
