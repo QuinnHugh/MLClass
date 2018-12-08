@@ -157,7 +157,7 @@ class FisherClassify(CudaSupport):
         """
         #将测试结果分为正和负两类(离边界越远越可信度强)
         cuda_test = test.to(self.device).float()
-        y_hat = tc.mv(cuda_test, self.w_hat) - self.thresh.repeat(test.shape[0], 1)
+        y_hat = tc.mv(cuda_test, self.w_hat) - self.thresh.repeat(test.shape[0])
         return y_hat
 
 
