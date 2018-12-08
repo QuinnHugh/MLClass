@@ -4,6 +4,7 @@
 import torch as tc
 
 class CudaSupport(object):
+    """cuda支持"""
     device = tc.device('cpu')##用于设置计算设备,默认cpu
     def __init__(self):
         ##默认初始化cuda
@@ -165,4 +166,3 @@ class PerceptronClassify(CudaSupport):
     """
     def __init__(self):
         CudaSupport.__init__(self)
-
