@@ -128,11 +128,11 @@ class FisherClassify(CudaSupport):
         u_mat = u.repeat(ten.shape[0], 1)
         sub_mat = ten - u_mat
         S_w = tc.mm(sub_mat.t(), sub_mat)
+        print("u_mat", u_mat.shape, "\n sub_mat:", sub_mat.shape, "\n sw", S_w.shape)
         return u, S_w
 
     def _w(self):
         S_w = self.Sw_1 + self.Sw_1
-        print(S_w.shape)
         self.w_hat = tc.mv(S_w.inverse(), self.u_2 - self.u_1)
 
     def _cal_thresh(self):
