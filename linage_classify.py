@@ -132,7 +132,7 @@ class FisherClassify(CudaSupport):
 
     def _w(self):
         S_w = self.Sw_1 + self.Sw_1
-        self.w_hat = tc.mv(S_w.inverse(), (self.u_2 - self.u_1).unsqueeze(1))
+        self.w_hat = tc.mv(S_w, (self.u_2 - self.u_1))
 
     def _cal_thresh(self):
         """计算用于判断分类的界限值"""
