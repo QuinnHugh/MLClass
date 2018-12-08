@@ -125,7 +125,6 @@ class FisherClassify(CudaSupport):
         返回S_w:类内离散矩阵
         """
         u = t.mean(0)
-        print(u.shape)
         u_mat = u.repeat(t.size()[0], 1)
         sub_mat = t - u_mat
         S_w = tc.mm(sub_mat.t(), sub_mat)
@@ -133,7 +132,7 @@ class FisherClassify(CudaSupport):
 
     def _w(self):
         S_w = self.Sw_1 + self.Sw_1
-        self.w_hat = tc.mv(S_w.inverse(), (self.u_2 - self.u_1))
+        self.w_hat = tc.mv(S_w.inverse(), (self.u_2 - self.u_1).unsqueeze(1))
 
     def _cal_thresh(self):
         """计算用于判断分类的界限值"""
