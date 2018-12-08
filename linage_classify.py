@@ -125,6 +125,7 @@ class FisherClassify(CudaSupport):
         返回S_w:类内离散矩阵
         """
         u = t.mean(0)
+        print(u.shape)
         u_mat = u.repeat(t.size()[0], 1)
         sub_mat = t - u_mat
         S_w = tc.mm(sub_mat.t(), sub_mat)
