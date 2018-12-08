@@ -117,16 +117,16 @@ class FisherClassify(CudaSupport):
         self.x_2 = x_2.to(self.device)
         self.update_w(self.x_1.float(), self.x_2.float())
 
-    def _calculate(self, t):
+    def _calculate(self, ten):
         """
         输入一个tensor的类数据计算类的均值向量以及类内离散矩阵
         参数tensor: 类数据tensor
         返回u:类均值向量
         返回S_w:类内离散矩阵
         """
-        u = t.mean(0)
-        u_mat = u.repeat(t.size()[0], 1)
-        sub_mat = t - u_mat
+        u = ten.mean(0)
+        u_mat = u.repeat(ten.shape[0], 1)
+        sub_mat = ten - u_mat
         S_w = tc.mm(sub_mat.t(), sub_mat)
         return u, S_w
 
