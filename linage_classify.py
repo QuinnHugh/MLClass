@@ -149,6 +149,7 @@ class FisherClassify(CudaSupport):
         self.Sw_1, self.u_1 = self._calculate(x_1)
         self.Sw_2, self.u_2 = self._calculate(x_2)
         self._w()
+        self._cal_thresh()
 
     def predict(self, test):
         """
